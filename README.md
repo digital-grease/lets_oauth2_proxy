@@ -7,6 +7,7 @@ This is an attempt to glue together linuxserver/letsencrypt and machinedata/oaut
 I'll add details on config and available parameters at some point, until then, see the original pages for information.
 
 * By default, this is set to dhlevel 4096. if you wish to change this, add `-e DHLEVEL=[number]`.
+    * btw, it takes a long time to generate a 4096 bit prime for this. go get coffee.
 * This assumes your config files are in a share that can be mounted.
 * for nginx config information, please see bogartusmaximus' link at the bottom of the readme.
 
