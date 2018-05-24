@@ -1,0 +1,75 @@
+# redirect all traffic to https
+server {
+        listen 80;
+        server_name _;
+        return 301 https://$host$request_uri;
+}
+
+# main server block
+server {
+        listen 443 ssl default_server;
+        root /config/www;
+        index index.html index.htm index.php;
+        server_name _;
+        include /config/nginx/ssl.conf;
+
+        location /oauth2/ {
+                include /config/nginx/oauth2.conf;
+        }
+
+        location / {
+                auth_request /oauth2/auth;
+                error_page 401 = /oauth2/start;
+                include /config/nginx/proxy.conf;
+                try_files $uri $uri/ /index.html /index.php?$args =404;
+        }
+
+        location ~ \.php$ {
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                # With php7-cgi alone:
+                fastcgi_pass 127.0.0.1:9000;
+                # With php7-fpm:
+                #fastcgi_pass unix:/var/run/php7-fpm.sock;
+                fastcgi_index index.php;
+                include /etc/nginx/fastcgi_params;
+        }
+}
+
+# example subdomains with oauth2 configs
+server {
+        listen 443 ssl;
+        root /config/www;
+        index index.html index.htm index.php;
+        server_name sonarr.*;
+        include /config/nginx/ssl.conf;
+
+        location /oauth2/ {
+                include /config/nginx/oauth2.conf;
+        }
+
+        location / {
+                auth_request /oauth2/auth;
+                error_page 401 = /oauth2/start;
+                include /config/nginx/proxy.conf;
+                proxy_pass http://<docker host ip>:8989;
+        }
+}
+
+server {
+        listen 443 ssl;
+        root /config/www;
+        index index.html index.htm index.php;
+        server_name radarr.*;
+        include /config/nginx/ssl.conf;
+
+        location /oauth2/ {
+                include /config/nginx/oauth2.conf;
+        }
+
+        location / {
+                auth_request /oauth2/auth;
+                error_page 401 = /oauth2/start;
+                include /config/nginx/proxy.conf;
+                proxy_pass http://<docker host ip>:7878;
+        }
+}
