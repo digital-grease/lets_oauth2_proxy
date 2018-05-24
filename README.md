@@ -28,7 +28,7 @@ digitalgrease/lets_oauth2_proxy; docker logs -f lets_oauth2_proxy
 ```
 
 credit:
-https://hub.docker.com/r/linuxserver/letsencrypt/
+https://hub.docker.com/r/linuxserver/letsencrypt/ <br/>
 https://hub.docker.com/r/machinedata/oauth2_proxy/
 
 Thanks to bogartusmaximus for nginx and oauth2_proxy config info.
