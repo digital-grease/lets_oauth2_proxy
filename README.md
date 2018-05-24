@@ -6,6 +6,26 @@ This is an attempt to glue together linuxserver/letsencrypt and machinedata/oaut
 
 I'll add details on config and available parameters at some point, until then, see the original pages for information.
 
+* By default, this is set to dhlevel 4096. if you wish to change this, add `-e DHLEVEL=[number]`.
+* This assumes your config files are in a share that can be mounted.
+* for nginx config information, please see bogartusmaximus' link at the bottom of the readme.
+
+```
+docker run -d --restart=always \
+--cap-add=NET_ADMIN \
+--name=lets_oauth2_proxy \
+-v /[PATH_TO_SHARE]/nginx:/config \
+-v /[PATH_TO_SHARE]/oauth2_proxy:/conf \
+-e EMAIL=[EMAIL_FOR_LETSENCRYPT] \
+-e URL=[BASE_URL] \
+-e SUBDOMAINS=[subdomain,subdomain,etc] \
+-e VALIDATION=http \
+-e OAUTH2_PROXY_CONFIG=/conf/oauth2_proxy.cfg \
+-p 80:80 -p 443:443 -p 4180:4180 \
+-e TZ=[TIMEZONE] \
+digitalgrease/lets_oauth2_proxy; docker logs -f lets_oauth2_proxy
+```
+
 credit:
 https://hub.docker.com/r/linuxserver/letsencrypt/
 https://hub.docker.com/r/machinedata/oauth2_proxy/
