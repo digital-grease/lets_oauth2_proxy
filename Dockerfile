@@ -14,9 +14,6 @@ ENV DHLEVEL=4096 ONLY_SUBDOMAINS=false AWS_CONFIG_FILE=/config/dns-conf/route53.
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 ENV OAUTH2_PROXY_VERSION="2.2"
 
-# add local files
-COPY root/ /
-
 # install packages
 # su/sudo with proper signaling inside docker
 RUN \
@@ -82,7 +79,9 @@ EXPOSE 4180
 HEALTHCHECK --interval=10s --timeout=5s --retries=3 \
     CMD curl --silent --fail http://localhost:4180/ping || exit 1
 
+# add local files
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
+COPY root/ /
 
 CMD ["oauth2_proxy", "--config", "/conf/oauth2_proxy.cfg"]
