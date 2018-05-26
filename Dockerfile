@@ -14,6 +14,9 @@ ENV DHLEVEL=4096 ONLY_SUBDOMAINS=false AWS_CONFIG_FILE=/config/dns-conf/route53.
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 ENV OAUTH2_PROXY_VERSION="2.2"
 
+# add local files
+COPY root/ /
+
 # install packages
 # su/sudo with proper signaling inside docker
 RUN \
@@ -66,6 +69,8 @@ RUN set -xe \
     \
     && chown -R oauth2_proxy:oauth2_proxy /conf /templates /oauth2_proxy \
     \
+    && chmod +x /docker-entrypoint.sh \
+    \
     && apk del .build-deps
 
 ENV PATH /oauth2_proxy:$PATH
@@ -81,5 +86,3 @@ COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["oauth2_proxy", "--config", "/conf/oauth2_proxy.cfg"]
-# add local files
-COPY root/ /
