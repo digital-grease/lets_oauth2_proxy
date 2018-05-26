@@ -2,7 +2,10 @@
 
 _.**oi**, the majority of this is **not** original work. all i've done is glue together amazing work done by other people, who are all credited at the bottom of this readme. enjoy._
 
-This is an attempt to glue together linuxserver/letsencrypt and machinedata/oauth2_proxy. Instead of the common setup involving these two, where letsencrypt proxies to a separate oauth2_proxy container, it will proxy through localhost to oauth2, simplifying the network setup.
+This is an attempt to glue the certbot and fail2ban functionality from linuxserver/letsencrypt onto machinedata/oauth2_proxy.
+
+
+**If you'd like the nginx server from linuxserver/letsencrypt as well, use the tag "nginx" or build from the dockerfile in the nginx branch.**
 
 I'll add details on config and available parameters at some point, until then, see the original pages for information.
 
@@ -15,7 +18,7 @@ I'll add details on config and available parameters at some point, until then, s
 docker run -d --restart=always \
 --cap-add=NET_ADMIN \
 --name=lets_oauth2_proxy \
--v /[PATH_TO_SHARE]/nginx:/config \
+-v /[PATH_TO_SHARE]/nginx:/config \ ##NGINX VERSION ONLY
 -v /[PATH_TO_SHARE]/oauth2_proxy:/conf \
 -e EMAIL=[EMAIL_FOR_LETSENCRYPT] \
 -e URL=[BASE_URL] \

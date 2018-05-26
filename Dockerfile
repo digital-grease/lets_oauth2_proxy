@@ -1,64 +1,27 @@
-FROM lsiobase/alpine.nginx:3.7
+FROM alpine:3.7
 
 # set version label
 LABEL build_version="0.1"
 LABEL maintainer="digitalgrease"
 
-# LETSENCRYPT STUFF
+# add user and group first so their IDs don't change
+RUN addgroup oauth2_proxy && adduser -G oauth2_proxy  -D -H oauth2_proxy
+
+
+
 # environment settings
 ENV DHLEVEL=4096 ONLY_SUBDOMAINS=false AWS_CONFIG_FILE=/config/dns-conf/route53.ini
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
+ENV OAUTH2_PROXY_VERSION="2.2"
 
 # install packages
+# su/sudo with proper signaling inside docker
 RUN \
- apk add --no-cache \
-	certbot \
-	curl \
-	fail2ban \
-	memcached \
-	nginx-mod-http-echo \
-	nginx-mod-http-fancyindex \
-	nginx-mod-http-geoip \
-	nginx-mod-http-headers-more \
-	nginx-mod-http-image-filter \
-	nginx-mod-http-lua \
-	nginx-mod-http-lua-upstream \
-	nginx-mod-http-nchan \
-	nginx-mod-http-perl \
-	nginx-mod-http-redis2 \
-	nginx-mod-http-set-misc \
-	nginx-mod-http-upload-progress \
-	nginx-mod-http-xslt-filter \
-	nginx-mod-mail \
-	nginx-mod-rtmp \
-	nginx-mod-stream \
-	nginx-mod-stream-geoip \
-	nginx-vim \
-	php7-bz2 \
-	php7-ctype \
-	php7-curl \
-	php7-dom \
-	php7-exif \
-	php7-gd \
-	php7-iconv \
-	php7-mcrypt \
-	php7-memcached \
-	php7-mysqli \
-	php7-mysqlnd \
-	php7-pdo_mysql \
-	php7-pdo_pgsql \
-	php7-pdo_sqlite \
-	php7-pgsql \
-	php7-phar \
-	php7-soap \
-	php7-sockets \
-	php7-sqlite3 \
-	php7-tokenizer \
-	php7-xml \
-	php7-xmlreader \
-	php7-zip \
-	py2-future \
-	py2-pip && \
+	apk add --no-cache su-exec \
+		certbot \
+		curl \
+		fail2ban \
+		memcached \
  echo "**** install certbot plugins ****" && \
  pip install --no-cache-dir \
 	certbot-dns-cloudflare \
@@ -78,15 +41,6 @@ RUN \
  mkdir -p /defaults/fail2ban && \
  mv /etc/fail2ban/action.d /defaults/fail2ban/ && \
  mv /etc/fail2ban/filter.d /defaults/fail2ban/
-
-# OAUTH STUFF
-# add user and group first so their IDs don't change
-RUN addgroup oauth2_proxy && adduser -G oauth2_proxy  -D -H oauth2_proxy
-
-# su/sudo with proper signaling inside docker
-RUN apk add --no-cache su-exec
-
-ENV OAUTH2_PROXY_VERSION="2.2"
 
 # install zeppelin
 RUN set -xe \
@@ -118,7 +72,7 @@ VOLUME [ "/templates" ]
 
 EXPOSE 4180
 
-HEALTHCHECK --interval=5s --timeout=3s --retries=3 \
+HEALTHCHECK --interval=10s --timeout=5s --retries=3 \
     CMD curl --silent --fail http://localhost:4180/ping || exit 1
 
 COPY docker-entrypoint.sh /
