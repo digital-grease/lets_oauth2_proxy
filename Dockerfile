@@ -66,8 +66,6 @@ RUN set -xe \
     \
     && chown -R oauth2_proxy:oauth2_proxy /conf /templates /oauth2_proxy \
     \
-    && chmod +x /docker-entrypoint.sh \
-    \
     && apk del .build-deps
 
 ENV PATH /oauth2_proxy:$PATH
@@ -83,5 +81,5 @@ HEALTHCHECK --interval=10s --timeout=5s --retries=3 \
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 COPY root/ /
-
+RUN chmod +x /docker-entrypoint.sh
 CMD ["oauth2_proxy", "--config", "/conf/oauth2_proxy.cfg"]
