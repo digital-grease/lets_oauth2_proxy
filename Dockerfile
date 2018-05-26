@@ -21,7 +21,9 @@ RUN \
 		certbot \
 		curl \
 		fail2ban \
-		memcached &&\
+		memcached \
+		py2-future \
+		py2-pip && \
  echo "**** install certbot plugins ****" && \
  pip install --no-cache-dir \
 	certbot-dns-cloudflare \
