@@ -81,7 +81,7 @@ RUN \
 
 # OAUTH STUFF
 # add user and group first so their IDs don't change
-RUN addgroup oauth2_proxy && adduser -G oauth2_proxy  -D -H oauth2_proxy
+#RUN addgroup oauth2_proxy && adduser -G oauth2_proxy  -D -H oauth2_proxy
 
 # su/sudo with proper signaling inside docker
 RUN apk add --no-cache su-exec
