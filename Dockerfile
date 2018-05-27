@@ -123,7 +123,7 @@ HEALTHCHECK --interval=5s --timeout=3s --retries=3 \
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
-
+RUN chmod +x /docker-entrypoint.sh
 CMD ["oauth2_proxy", "--config", "/conf/oauth2_proxy.cfg"]
 # add local files
 COPY root/ /
