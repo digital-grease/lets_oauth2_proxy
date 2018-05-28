@@ -5,7 +5,7 @@ _.**oi**, the majority of this is **not** original work. all i've done is glue t
 This is an attempt to glue the certbot and fail2ban functionality from linuxserver/letsencrypt onto machinedata/oauth2_proxy.
 
 
-**If you'd like the nginx server from linuxserver/letsencrypt as well, use the tag "nginx" or build from the dockerfile in the nginx branch.**
+**If you'd like the nginx server from linuxserver/letsencrypt as well, use the tag "nginx" or build from the dockerfile in the nginx branch. Nginx is necessary for using multiple subdomains, but not necessary if you'll be routing based on path.**
 
 I'll add details on config and available parameters at some point, until then, see the original pages for information.
 

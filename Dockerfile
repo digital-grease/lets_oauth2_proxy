@@ -5,7 +5,7 @@ LABEL build_version="0.1"
 LABEL maintainer="digitalgrease"
 
 # add user and group first so their IDs don't change
-RUN addgroup oauth2_proxy && adduser -G oauth2_proxy  -D -H oauth2_proxy
+#RUN addgroup oauth2_proxy && adduser -G oauth2_proxy  -D -H oauth2_proxy
 
 
 
@@ -64,7 +64,7 @@ RUN set -xe \
     \
     && mkdir /templates \
     \
-    && chown -R oauth2_proxy:oauth2_proxy /conf /templates /oauth2_proxy \
+    #&& chown -R oauth2_proxy:oauth2_proxy /conf /templates /oauth2_proxy \
     \
     && apk del .build-deps
 
